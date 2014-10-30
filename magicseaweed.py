@@ -10,9 +10,9 @@ class Magicseaweed(object):
         base_url = 'http://magicseaweed.com/api/{0}/forecast'
         self.api_url = base_url.format(api_key)
 
-    def timestamp_from_datetime(dt):
-        """ Returns an UNIX timestamp as int given a datetime instance. """
-        return str(calendar.gmtime(dt.utc_timetuple()))
+    def timestamp_from_datetime(self, dt):
+        """ Returns an UNIX timestamp as str given a datetime instance. """
+        return calendar.timegm(dt.timetuple())
 
     def round_timeframe(self, dt):
         """ Returns the next available forecast timeframe as datetime.
@@ -28,8 +28,8 @@ class Magicseaweed(object):
         8  21:00:00
 
         Example:
-        If datetime.datetime(2014, 10, 30 10, 0, 0) is passed as argument,
-        this function returns datetime.datetime(2014, 10, 30 12, 0, 0)
+        If datetime.datetime(2014, 10, 30, 10, 0, 0) is passed as argument,
+        this function returns datetime.datetime(2014, 10, 30, 12, 0, 0).
 
         """
         if dt.hour % 3 != 0:
@@ -39,15 +39,19 @@ class Magicseaweed(object):
             return datetime(dt.year, dt.month, dt.day, rounded, 0, 0)
         return datetime(dt.year, dt.month, dt.day, dt.hour, 0, 0)
 
-    def get_forecast(self, spot_id):
-        """ Makes requests to magicseaweed's forecast API and returns
-        a dictionary with the results.
+    def get_forecast(self, spot_id, local_datetime=None):
+        """ Makes requests to magicseaweed's forecast API.
         """
         response = requests.get('{0}?spot_id={1}'.format(self.api_url, spot_id))
-        # if utc_datetime:
-        #     date = utc_datetime.date
-        #     utc_timestamp = 1
-        #     for timeframe in response:
-        #         return timeframe if timeframe['timestamp'] == utc_timestamp
+        if local_datetime:
+            try:
+                local_datetime = self.round_timeframe(local_datetime)
+            except:
+                raise TypeError('local_datetime must be of type datetime.datetime')
+            local_timestamp = self.timestamp_from_datetime(local_datetime)
+            for forecast in response.json():
+                if forecast['localTimestamp'] == local_timestamp:
+                    return forecast
+            return None
         return response.json()
 

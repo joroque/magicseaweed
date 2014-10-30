@@ -1,6 +1,6 @@
 import os
 import unittest
-import datetime
+from datetime import datetime
 
 from magicseaweed import Magicseaweed
 
@@ -17,15 +17,15 @@ class MagicseaweedTestCase(unittest.TestCase):
         # http://hist-5.msw.ms/wave/750/1-1415048400-1.gif
         self.assertIn('wave', swell_chart_url)
 
-    # def test_get_forecast_with_utc(self):
-    #     forecast = self.msw.get_forecast(920, utc_timestamp=datetime.utcnow())
-    #     self.assertEqual(len(forecast), 1)
+    def test_get_forecast_with_datetime(self):
+         forecast = self.msw.get_forecast(920, local_datetime=datetime.utcnow())
+         self.assertIsNotNone(forecast['localTimestamp'])
 
     def test_round_timeframe(self):
-        dt = datetime.datetime(2014, 10, 30, 7, 30, 0) # 2014-10-30 7:30:00
+        dt = datetime(2014, 10, 30, 7, 30, 0) # 2014-10-30 7:30:00
         result = self.msw.round_timeframe(dt)
         self.assertEqual(result.hour, 9)
-        dt = datetime.datetime(2014, 10, 30, 15, 30, 0) # 2014-10-30 15:30:00
+        dt = datetime(2014, 10, 30, 15, 30, 0) # 2014-10-30 15:30:00
         result = self.msw.round_timeframe(dt)
         self.assertEqual(result.hour, 15)
         
