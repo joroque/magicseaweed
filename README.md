@@ -1,4 +1,4 @@
-magicseaweed
+Magicseaweed
 ============
 
 Python wrapper for [Magicseaweed](http://magicseaweed.com/developer/forecast-api) marine forecasting API.
