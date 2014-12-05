@@ -33,6 +33,8 @@ class Magicseaweed(object):
         this function returns datetime.datetime(2014, 10, 30, 12, 0, 0).
 
         """
+        if dt.hour == 23:
+            return datetime(dt.year, dt.month, dt.day, 0, 0, 0)
         if dt.hour % 3 != 0:
             rounded = dt.hour
             while rounded % 3 != 0:
