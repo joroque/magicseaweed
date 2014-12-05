@@ -1,5 +1,6 @@
-import requests
 import calendar
+import requests
+
 from datetime import datetime
 
 class Magicseaweed(object):
@@ -39,19 +40,22 @@ class Magicseaweed(object):
             return datetime(dt.year, dt.month, dt.day, rounded, 0, 0)
         return datetime(dt.year, dt.month, dt.day, dt.hour, 0, 0)
 
-    def get_forecast(self, spot_id, local_datetime=None):
-        """ Makes requests to magicseaweed's forecast API.
+    def get_forecast(self, spot_id, units='eu', local_datetime=None):
+        """ Makes requests to magicseaweed's forecast API. The default unit is
+        European.
         """
-        response = requests.get('{0}?spot_id={1}'.format(self.api_url, spot_id))
-        if local_datetime:
+        response = requests.get('{0}?spot_id={1}&units={2}'
+                                .format(self.api_url, spot_id, units))
+
+        if local_datetime is not None:
             try:
                 local_datetime = self.round_timeframe(local_datetime)
             except:
-                raise TypeError('local_datetime must be of type datetime.datetime')
+                raise TypeError(
+                        'local_datetime must be of type datetime.datetime')
             local_timestamp = self.timestamp_from_datetime(local_datetime)
             for forecast in response.json():
                 if forecast['localTimestamp'] == local_timestamp:
                     return forecast
             return None
         return response.json()
-
