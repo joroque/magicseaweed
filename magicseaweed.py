@@ -1,7 +1,7 @@
 import calendar
 import requests
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Magicseaweed(object):
 
@@ -33,13 +33,8 @@ class Magicseaweed(object):
         this function returns datetime.datetime(2014, 10, 30, 12, 0, 0).
 
         """
-        if dt.hour == 23:
-            return datetime(dt.year, dt.month, dt.day, 0, 0, 0)
-        if dt.hour % 3 != 0:
-            rounded = dt.hour
-            while rounded % 3 != 0:
-                rounded +=1
-            return datetime(dt.year, dt.month, dt.day, rounded, 0, 0)
+        while dt.hour % 3 != 0:
+            dt = dt + timedelta(hours=1)
         return datetime(dt.year, dt.month, dt.day, dt.hour, 0, 0)
 
     def get_forecast(self, spot_id, units='eu', local_datetime=None):
