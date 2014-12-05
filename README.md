@@ -36,7 +36,7 @@ By default, European units are used (m, kph, c). You can use choose among 3 diff
 forecast = msw.get_forecast(spot_id, units='us')
 ```
 
-Thank [Garret](https://github.com/gsquire) for this addition.
+Thank [Garrett](https://github.com/gsquire) for this addition.
 
 
 ## License
